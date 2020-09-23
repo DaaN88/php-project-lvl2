@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+
+use function Gendiff\data\dataForGendiff\getReference;
+
+// Путь который будет использован при глобальной установке пакета
+$autoloadGlobalPath = __DIR__ . '/../../../autoload.php';
+// Путь для локальной работы с проектом
+$autoloadLocalPath = __DIR__ . '/../vendor/autoload.php';
+
+if (file_exists($autoloadGlobalPath)) {
+    require_once $autoloadGlobalPath;
+} else {
+    require_once $autoloadLocalPath;
+}
+
+$doc = getReference();
+
+$params = array(
+  'argv'=>array_slice($_SERVER['argv'], 1),
+  'help'=>true,
+  'version'=>'Generate diff',
+  'optionsFirst'=>true,
+);
+
+$result = Docopt::handle($doc, $params);
+
+foreach ($result as $k=>$v) {
+    echo $k . ': ' . json_encode($v) . PHP_EOL;
+}

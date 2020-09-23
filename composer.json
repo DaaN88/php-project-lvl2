@@ -1,0 +1,32 @@
+{
+    "name": "anton-shvedov88/difference_calculator",
+    "autoload": {
+        "files": [
+            "vendor/docopt/docopt/src/docopt.php",
+            "src/dataForGendiff.php"
+        ]
+    },
+    "description": "project_2",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DaaN88",
+            "email": "ant-shvedov@yandex.ru"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "docopt/docopt": "^1.0",
+        "ext-json": "*"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "scripts": {
+        "phpcs": "phpcs"
+    },
+    "prefer-stable": true
+}
