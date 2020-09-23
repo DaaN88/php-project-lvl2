@@ -17,14 +17,14 @@ if (file_exists($autoloadGlobalPath)) {
 $doc = getReference();
 
 $params = array(
-  'argv'=>array_slice($_SERVER['argv'], 1),
-  'help'=>true,
-  'version'=>'Generate diff',
-  'optionsFirst'=>true,
+  'argv' => array_slice($_SERVER['argv'], 1),
+  'help' => true,
+  'version' => 'Generate diff',
+  'optionsFirst' => true,
 );
 
 $result = Docopt::handle($doc, $params);
 
-foreach ($result as $k=>$v) {
+foreach ($result as $k => $v) {
     echo $k . ': ' . json_encode($v) . PHP_EOL;
 }
