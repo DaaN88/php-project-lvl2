@@ -15,7 +15,6 @@
             "email": "ant-shvedov@yandex.ru"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "docopt/docopt": "^1.0",
         "ext-json": "*"
