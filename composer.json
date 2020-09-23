@@ -2,7 +2,6 @@
     "name": "anton-shvedov88/difference_calculator",
     "autoload": {
         "files": [
-            "vendor/docopt/docopt/src/docopt.php",
             "src/dataForGendiff.php"
         ]
     },

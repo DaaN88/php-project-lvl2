@@ -2,8 +2,6 @@
 
 namespace Gendiff\data\dataForGendiff;
 
-use Docopt;
-
 function getReference()
 {
     return <<<DOCOPT
