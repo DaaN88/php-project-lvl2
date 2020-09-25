@@ -76,13 +76,6 @@ function getData(string $filePath): string
     return file_get_contents($filePath);
 }
 
-function getKeyAddedPares($dataBefore, $dataAfter)
-{
-    $key = array_diff(array_keys($dataAfter), array_keys($dataBefore));
-
-    return implode($key);
-}
-
 function fetchToString($value): string
 {
     if (is_bool($value)) {
