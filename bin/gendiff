@@ -26,7 +26,7 @@ $params = [
 
 $result = Docopt::handle($doc, $params);
 
-$nameFileCurrentVer = $result->args['<currentVersionFile>'];
-$nameFileNewVer = $result->args['<newVersionFile>'];
+$nameBeforeFile = $result->args['<firstFile>'];
+$nameAfterFile = $result->args['<secondFile>'];
 
-echo(genDiff($nameFileCurrentVer, $nameFileNewVer));
+echo(genDiff($nameBeforeFile, $nameAfterFile));

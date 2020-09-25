@@ -2,37 +2,50 @@
 
 namespace Gendiff\Application\Functions;
 
-function genDiff(string $nameCurrentFile, string $nameNewFile)
-{
-    $arrayFromCurrentFile = json_decode(file_get_contents($nameCurrentFile), true);
-    $arrayFromNewFile = json_decode(file_get_contents($nameNewFile), TRUE);
+use RuntimeException;
 
+function genDiff(string $nameBeforeFile, string $nameAfterFile)
+{
+    try {
+        $dataBefore = json_decode(getData($nameBeforeFile), true);
+        $dataAfter = json_decode(getData($nameAfterFile), TRUE);
+
+        $results = getComparedNodes($dataBefore, $dataAfter);
+
+        return "{\n" . implode("\n", $results) . "\n}";
+    } catch (RuntimeException $msg) {
+        echo $msg->getMessage();
+    }
+}
+
+function getComparedNodes($dataBefore, $dataAfter)
+{
     $results[] = array_reduce(
-        array_keys($arrayFromCurrentFile),
+        array_keys($dataBefore),
         static function(
             $carry,
-            $keyFromCurrentFile
+            $keyDataBefore
         ) use (
-            $arrayFromCurrentFile,
-            $arrayFromNewFile
+            $dataBefore,
+            $dataAfter
         ) {
-            $valueCurrentFile = fetchToString($arrayFromCurrentFile[$keyFromCurrentFile]);
+            $valueDataBefore = fetchToString($dataBefore[$keyDataBefore]);
 
-            if (array_key_exists($keyFromCurrentFile, $arrayFromNewFile)) {
-                $valueNewFile = fetchToString($arrayFromNewFile[$keyFromCurrentFile]);
+            if (array_key_exists($keyDataBefore, $dataAfter)) {
+                $valueDataAfter = fetchToString($dataAfter[$keyDataBefore]);
 
-                if ($valueCurrentFile === $valueNewFile) { // unchanged
-                    $carry[] = "   " . "$keyFromCurrentFile: $valueNewFile";
+                if ($valueDataBefore === $valueDataAfter) { // unchanged
+                    $carry[] = "   " . "$keyDataBefore: $valueDataAfter";
                 }
 
-                if ($valueCurrentFile !== $valueNewFile) { // changed
-                    $carry[] =" - " . "$keyFromCurrentFile: $valueCurrentFile";
-                    $carry[] =" + " . "$keyFromCurrentFile: $valueNewFile";
+                if ($valueDataBefore !== $valueDataAfter) { // changed
+                    $carry[] =" - " . "$keyDataBefore: $valueDataBefore";
+                    $carry[] =" + " . "$keyDataBefore: $valueDataAfter";
                 }
             }
 
-            if (!array_key_exists($keyFromCurrentFile, $arrayFromNewFile)) {
-                $carry[] = " - " . "$keyFromCurrentFile: $valueCurrentFile"; // deleted
+            if (!array_key_exists($keyDataBefore, $dataAfter)) {
+                $carry[] = " - " . "$keyDataBefore: $valueDataBefore"; // deleted
             }
 
             return $carry;
@@ -41,18 +54,18 @@ function genDiff(string $nameCurrentFile, string $nameNewFile)
     );
 
     $results[] = array_reduce(
-        array_keys($arrayFromNewFile),
+        array_keys($dataAfter),
         static function (
             $carry,
-            $keyFromNewFile
+            $keyDataAfter
         ) use (
-            $arrayFromNewFile,
-            $arrayFromCurrentFile
+            $dataAfter,
+            $dataBefore
         ) {
-            $valueNewFile = fetchToString($arrayFromNewFile[$keyFromNewFile]);
+            $valueDataAfter = fetchToString($dataAfter[$keyDataAfter]);
 
-            if (!array_key_exists($keyFromNewFile, $arrayFromCurrentFile)) {
-                $carry[] = " + " . "$keyFromNewFile: $valueNewFile"; // added
+            if (!array_key_exists($keyDataAfter, $dataBefore)) {
+                $carry[] = " + " . "$keyDataAfter: $valueDataAfter"; // added
             }
 
             return $carry;
@@ -60,9 +73,16 @@ function genDiff(string $nameCurrentFile, string $nameNewFile)
         []
     );
 
-    $mergedResults = array_merge(...$results);
+    return array_merge(...$results);
+}
 
-    return "{\n" . implode("\n", $mergedResults) . "\n}";
+function getData(string $filePath)
+{
+    if (!file_exists($filePath)) {
+        throw new RuntimeException('File (one or more) doesn\'t exist');
+    }
+
+    return file_get_contents($filePath);
 }
 
 function fetchToString($value): string
