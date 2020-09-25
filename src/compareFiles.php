@@ -53,36 +53,34 @@ function getComparedNodes($dataBefore, $dataAfter)
         []
     );
 
-    $results[] = array_reduce(
-        array_keys($dataAfter),
-        static function (
-            $carry,
-            $keyDataAfter
-        ) use (
-            $dataAfter,
-            $dataBefore
-        ) {
+    $addedNodes = array_map(static function ($keyDataAfter) use ($dataBefore, $dataAfter) {
+        if (!array_key_exists($keyDataAfter, $dataBefore)) {
             $valueDataAfter = fetchToString($dataAfter[$keyDataAfter]);
 
-            if (!array_key_exists($keyDataAfter, $dataBefore)) {
-                $carry[] = " + " . "$keyDataAfter: $valueDataAfter"; // added
-            }
+            return " + " . "$keyDataAfter: $valueDataAfter"; // added
+        }
+        return [];
+    }, array_keys($dataAfter));
 
-            return $carry;
-        },
-        []
-    );
+    $results[] = array_filter($addedNodes);
 
     return array_merge(...$results);
 }
 
-function getData(string $filePath)
+function getData(string $filePath): string
 {
     if (!file_exists($filePath)) {
         throw new RuntimeException('File (one or more) doesn\'t exist');
     }
 
     return file_get_contents($filePath);
+}
+
+function getKeyAddedPares($dataBefore, $dataAfter)
+{
+    $key = array_diff(array_keys($dataAfter), array_keys($dataBefore));
+
+    return implode($key);
 }
 
 function fetchToString($value): string
