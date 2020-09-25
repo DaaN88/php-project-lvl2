@@ -8,7 +8,7 @@ function genDiff(string $pathBeforeFile, string $pathAfterFile)
 {
     try {
         $dataBefore = json_decode(getData($pathBeforeFile), true);
-        $dataAfter = json_decode(getData($pathAfterFile), TRUE);
+        $dataAfter = json_decode(getData($pathAfterFile), true);
 
         $results = getComparedNodes($dataBefore, $dataAfter);
 
@@ -22,7 +22,7 @@ function getComparedNodes($dataBefore, $dataAfter)
 {
     $results[] = array_reduce(
         array_keys($dataBefore),
-        static function(
+        static function (
             $carry,
             $keyDataBefore
         ) use (
@@ -39,8 +39,8 @@ function getComparedNodes($dataBefore, $dataAfter)
                 }
 
                 if ($valueDataBefore !== $valueDataAfter) { // changed
-                    $carry[] =" - " . "$keyDataBefore: $valueDataBefore";
-                    $carry[] =" + " . "$keyDataBefore: $valueDataAfter";
+                    $carry[] = " - " . "$keyDataBefore: $valueDataBefore";
+                    $carry[] = " + " . "$keyDataBefore: $valueDataAfter";
                 }
             }
 
