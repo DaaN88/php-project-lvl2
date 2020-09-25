@@ -38,7 +38,7 @@ function getComparedNodes($dataBefore, $dataAfter)
                     $carry[] = "   " . "$keyDataBefore: $valueDataAfter";
                 }
 
-                if ($valueDataBefore !== $valueDataAfter) { // changed
+                if ($valueDataBefore !== $valueDataAfter) { // Changed
                     $carry[] = " - " . "$keyDataBefore: $valueDataBefore";
                     $carry[] = " + " . "$keyDataBefore: $valueDataAfter";
                 }
