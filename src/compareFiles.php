@@ -4,11 +4,11 @@ namespace Gendiff\Application\Functions;
 
 use RuntimeException;
 
-function genDiff(string $nameBeforeFile, string $nameAfterFile)
+function genDiff(string $pathBeforeFile, string $pathAfterFile)
 {
     try {
-        $dataBefore = json_decode(getData($nameBeforeFile), true);
-        $dataAfter = json_decode(getData($nameAfterFile), TRUE);
+        $dataBefore = json_decode(getData($pathBeforeFile), true);
+        $dataAfter = json_decode(getData($pathAfterFile), TRUE);
 
         $results = getComparedNodes($dataBefore, $dataAfter);
 

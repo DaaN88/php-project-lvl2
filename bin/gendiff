@@ -26,7 +26,7 @@ $params = [
 
 $result = Docopt::handle($doc, $params);
 
-$nameBeforeFile = $result->args['<firstFile>'];
-$nameAfterFile = $result->args['<secondFile>'];
+$pathBeforeFile = $result->args['<firstFile>'];
+$pathAfterFile = $result->args['<secondFile>'];
 
-echo(genDiff($nameBeforeFile, $nameAfterFile));
+echo(genDiff($pathBeforeFile, $pathAfterFile));
