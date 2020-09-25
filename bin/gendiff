@@ -2,6 +2,7 @@
 <?php
 
 use function Gendiff\data\dataForGendiff\getReference;
+use function Gendiff\Application\Functions\genDiff;
 
 // Путь который будет использован при глобальной установке пакета
 $autoloadGlobalPath = __DIR__ . '/../../../autoload.php';
@@ -24,3 +25,8 @@ $params = [
 ];
 
 $result = Docopt::handle($doc, $params);
+
+$nameFileCurrentVer = $result->args['<currentVersionFile>'];
+$nameFileNewVer = $result->args['<newVersionFile>'];
+
+echo(genDiff($nameFileCurrentVer, $nameFileNewVer));

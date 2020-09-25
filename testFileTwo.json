@@ -1,0 +1,6 @@
+{
+  "timeout": 20,
+  "der": 35,
+  "verbose": true,
+  "host": "hexlet.io"
+}

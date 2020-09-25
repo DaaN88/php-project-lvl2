@@ -2,7 +2,8 @@
     "name": "anton-shvedov88/difference_calculator",
     "autoload": {
         "files": [
-            "src/dataForGendiff.php"
+            "src/dataForGendiff.php",
+            "src/compareFiles.php"
         ]
     },
     "description": "project_2",

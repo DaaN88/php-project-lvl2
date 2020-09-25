@@ -10,7 +10,7 @@ function getReference()
     Usage:
         gendiff (-h|--help)
         gendiff (-v|--version)
-        gendiff [--format <fmt>] <firstFile> <secondFile>
+        gendiff [--format <fmt>] <currentVersionFile> <newVersionFile>
     
     Options:
         -h --help                     Show this screen
