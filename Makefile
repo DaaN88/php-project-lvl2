@@ -5,6 +5,6 @@ autoload:
 lint:
 	composer run-script phpcs -- --standard=PSR12 src bin
 test:
-	composer exec --verbose phpunit src\tests\GenDiffTest.php
+	composer exec --verbose phpunit src/tests/GenDiffTest.php
 test-coverage:
-	composer exec --verbose phpunit src\tests\GenDiffTest.php -- --coverage-clover build/logs/clover.xml
+	composer exec --verbose phpunit src/tests/GenDiffTest.php -- --coverage-clover build/logs/clover.xml
