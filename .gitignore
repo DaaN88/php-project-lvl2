@@ -1,2 +1,7 @@
 /vendor/
 /.idea
+logs
+*.swo
+*.swp
+*.cache
+build
