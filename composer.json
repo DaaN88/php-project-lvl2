@@ -30,7 +30,7 @@
     ],
     "scripts": {
         "phpcs": "phpcs",
-        "test": "phpunit tests"
+        "test": "phpunit src\\tests\\GenDiffTest.php"
     },
     "prefer-stable": true
 }
