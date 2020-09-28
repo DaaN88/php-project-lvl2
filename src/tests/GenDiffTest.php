@@ -1,6 +1,9 @@
 <?php
 
+namespace Tests\Functions\GenDiffTest;
+
 use PHPUnit\Framework\TestCase;
+
 use function Gendiff\Application\Functions\genDiff;
 
 class GenDiffTest extends TestCase
