@@ -9,11 +9,11 @@ use function Gendiff\Application\Functions\genDiff;
 class GenDiffTest extends TestCase
 {
 
-    private string $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
-    private string $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
+    private $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
+    private $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
 
-    private string $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
-    private string $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
+    private $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
+    private $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
 
     /**
      * @dataProvider additionProviderJson
