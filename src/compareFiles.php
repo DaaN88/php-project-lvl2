@@ -2,20 +2,14 @@
 
 namespace Gendiff\Application\Functions;
 
-use RuntimeException;
-
 function genDiff(string $pathBeforeFile, string $pathAfterFile)
 {
-    try {
-        $dataBefore = json_decode(getData($pathBeforeFile), true);
-        $dataAfter = json_decode(getData($pathAfterFile), true);
+    $dataBefore = parsers($pathBeforeFile);
+    $dataAfter = parsers($pathAfterFile);
 
-        $results = getComparedNodes($dataBefore, $dataAfter);
+    $results = getComparedNodes($dataBefore, $dataAfter);
 
-        return "{\n" . implode("\n", $results) . "\n}";
-    } catch (RuntimeException $msg) {
-        echo $msg->getMessage();
-    }
+    return "{\n" . implode("\n", $results) . "\n}";
 }
 
 function getComparedNodes($dataBefore, $dataAfter)
@@ -29,23 +23,24 @@ function getComparedNodes($dataBefore, $dataAfter)
             $dataBefore,
             $dataAfter
         ) {
+            $key = fetchToString($keyDataBefore);
             $valueDataBefore = fetchToString($dataBefore[$keyDataBefore]);
 
             if (array_key_exists($keyDataBefore, $dataAfter)) {
                 $valueDataAfter = fetchToString($dataAfter[$keyDataBefore]);
 
                 if ($valueDataBefore === $valueDataAfter) { // unchanged
-                    $carry[] = "   " . "$keyDataBefore: $valueDataAfter";
+                    $carry[] = "   " . "$key: $valueDataAfter";
                 }
 
                 if ($valueDataBefore !== $valueDataAfter) { // Changed
-                    $carry[] = " - " . "$keyDataBefore: $valueDataBefore";
-                    $carry[] = " + " . "$keyDataBefore: $valueDataAfter";
+                    $carry[] = " - " . "$key: $valueDataBefore";
+                    $carry[] = " + " . "$key: $valueDataAfter";
                 }
             }
 
             if (!array_key_exists($keyDataBefore, $dataAfter)) {
-                $carry[] = " - " . "$keyDataBefore: $valueDataBefore"; // deleted
+                $carry[] = " - " . "$key: $valueDataBefore"; // deleted
             }
 
             return $carry;
@@ -55,9 +50,10 @@ function getComparedNodes($dataBefore, $dataAfter)
 
     $addedNodes = array_map(static function ($keyDataAfter) use ($dataBefore, $dataAfter) {
         if (!array_key_exists($keyDataAfter, $dataBefore)) {
+            $key = fetchToString($keyDataAfter);
             $valueDataAfter = fetchToString($dataAfter[$keyDataAfter]);
 
-            return " + " . "$keyDataAfter: $valueDataAfter"; // added
+            return " + " . "$key: $valueDataAfter"; // added
         }
         return [];
     }, array_keys($dataAfter));
@@ -65,15 +61,6 @@ function getComparedNodes($dataBefore, $dataAfter)
     $results[] = array_filter($addedNodes);
 
     return array_merge(...$results);
-}
-
-function getData(string $filePath): string
-{
-    if (!file_exists($filePath)) {
-        throw new RuntimeException('File (one or more) doesn\'t exist');
-    }
-
-    return file_get_contents($filePath);
 }
 
 function fetchToString($value): string

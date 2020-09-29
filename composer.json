@@ -3,7 +3,8 @@
     "autoload": {
         "files": [
             "src/dataForGendiff.php",
-            "src/compareFiles.php"
+            "src/compareFiles.php",
+            "src/parsers.php"
         ]
     },
     "description": "project_2",
@@ -18,7 +19,8 @@
     "minimum-stability": "dev",
     "require": {
         "docopt/docopt": "^1.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "symfony/yaml": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
