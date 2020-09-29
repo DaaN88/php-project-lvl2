@@ -5,7 +5,7 @@ logs
 *.swp
 *.cache
 build
-testFileOne.json
-testFileTwo.json
+testFileBefore.json
+testFileAfter.json
 testFileAfter.yml
 testFileBefore.yml
