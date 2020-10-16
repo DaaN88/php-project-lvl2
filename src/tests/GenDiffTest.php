@@ -8,12 +8,14 @@ use function Gendiff\Application\Functions\genDiff;
 
 class GenDiffTest extends TestCase
 {
-
     private $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
     private $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
 
     private $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
     private $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
+
+    private $pathToFileNestedBeforeJson = 'src/tests/fixtures/testFileNestedOne.json';
+    private $pathToFileNestedAfterJson = 'src/tests/fixtures/testFileNestedTwo.json';
 
     /**
      * @dataProvider additionProviderJson
@@ -27,6 +29,14 @@ class GenDiffTest extends TestCase
      * @dataProvider additionProviderYml
      */
     public static function testOnEqualsYml($expectedValue, $actualValue): void
+    {
+        self::assertEquals($expectedValue, $actualValue);
+    }
+
+    /**
+     * @dataProvider additionProviderNestedJson
+     */
+    public static function testOnNestedEqualsJson($expectedValue, $actualValue): void
     {
         self::assertEquals($expectedValue, $actualValue);
     }
@@ -52,6 +62,19 @@ class GenDiffTest extends TestCase
         );
 
         $actual = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml);
+
+        return [
+          [$expectedData, $actual],
+        ];
+    }
+
+    public function additionProviderNestedJson(): array
+    {
+        $expectedData = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsForNested.txt"
+        );
+
+        $actual = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson);
 
         return [
           [$expectedData, $actual],
