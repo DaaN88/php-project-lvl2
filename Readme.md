@@ -4,4 +4,6 @@
 Первая проверка работы пакета (сверка плоских json-файлов): <br/>
 [![asciicast](https://asciinema.org/a/BiXU503jIuWW9jPQDZAxuMLM6.svg)](https://asciinema.org/a/BiXU503jIuWW9jPQDZAxuMLM6)<br/>
 Вторая проверка работы пакета (сверка плоских yaml-файлов): <br/>
-[![asciicast](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ.svg)](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ)
+[![asciicast](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ.svg)](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ)<br/>
+Третья проверка работы пакета (сверка вложенных json-файлов; 6-ой шаг):<br/>
+[![asciicast](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ.svg)](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ)
