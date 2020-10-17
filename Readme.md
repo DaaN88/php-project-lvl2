@@ -6,4 +6,6 @@
 Вторая проверка работы пакета (сверка плоских yaml-файлов): <br/>
 [![asciicast](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ.svg)](https://asciinema.org/a/3ZCurQmW4Ag3cnB0VdAK8GEVZ)<br/>
 Третья проверка работы пакета (сверка вложенных json-файлов; 6-ой шаг):<br/>
-[![asciicast](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ.svg)](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ)
+[![asciicast](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ.svg)](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ)<br/>
+Четвертая проверка работы пакета (вывод в plain-формате; 7-ой шаг):<br/>
+[![asciicast](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU.svg)](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU)
