@@ -41,6 +41,14 @@ class GenDiffTest extends TestCase
         self::assertEquals($expectedValue, $actualValue);
     }
 
+    /**
+     * @dataProvider additionProviderPlainFormat
+     */
+    public static function testEqualsPlainFormat($expectedValue, $actualValue): void
+    {
+        self::assertEquals($expectedValue, $actualValue);
+    }
+
 
     public function additionProviderJson(): array
     {
@@ -48,7 +56,7 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsFirstTest.txt"
         );
 
-        $actual = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson);
+        $actual = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'string');
 
         return [
             [$expectedData, $actual],
@@ -61,7 +69,7 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsFirstTest.txt"
         );
 
-        $actual = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml);
+        $actual = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'string');
 
         return [
           [$expectedData, $actual],
@@ -74,10 +82,35 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsForNested.txt"
         );
 
-        $actual = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson);
+        $actual = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'string');
 
         return [
-          [$expectedData, $actual],
+            [$expectedData, $actual],
+        ];
+    }
+
+    public function additionProviderPlainFormat(): array
+    {
+        $expectedDataNested = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsPlainForNested.txt"
+        );
+
+        $expectedDataJson = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsPlainJson.txt"
+        );
+
+        $expectedDataYml = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsPlainYml.txt"
+        );
+
+        $actualNested = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'plain');
+        $actualJson = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'plain');
+        $actualYml = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'plain');
+
+        return [
+            [$expectedDataNested, $actualNested],
+            [$expectedDataJson, $actualJson],
+            [$expectedDataYml, $actualYml],
         ];
     }
 }

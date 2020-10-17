@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions;
+namespace Gendiff\Application\Functions\FormatAST;
 
 function formatAST($value, int $depth = 0): string
 {

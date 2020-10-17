@@ -1,0 +1,6 @@
+Property 'timeout' was updated. From '50' to '20'
+Property 'proxy' was removed
+Property 'follow' was removed
+Property 'der' was updated. From '34' to '35'
+Property 'verbose' was added with value: 'true'
+Property 'nokle' was added with value: '2'

@@ -5,7 +5,8 @@
             "src/dataForGendiff.php",
             "src/parsers.php",
             "src/builderAST.php",
-            "src/formatAST.php"
+            "src/Formatters/formatAST.php",
+            "src/Formatters/plainFormatter.php"
         ]
     },
     "description": "project_2",
