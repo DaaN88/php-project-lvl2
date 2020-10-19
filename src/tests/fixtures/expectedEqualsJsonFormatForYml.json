@@ -1,0 +1,1 @@
+{"host":{"value":"hexlet.io","status":"unchanged"},"timeout":{"oldValue":50,"newValue":20,"status":"changed"},"proxy":{"value":"123.234.53.22","status":"deleted"},"follow":{"value":false,"status":"deleted"},"der":{"oldValue":34,"newValue":35,"status":"changed"},"verbose":{"value":true,"status":"added"},"nokle":{"value":2,"status":"added"}}

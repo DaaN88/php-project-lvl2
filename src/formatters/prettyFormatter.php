@@ -1,8 +1,8 @@
 <?php
 
-namespace Gendiff\Application\Functions\FormatAST;
+namespace Gendiff\Application\Functions\PrettyFormatter;
 
-function formatAST($value, int $depth = 0): string
+function getPrettyFormat($value, int $depth = 0): string
 {
     $indent = getIndents($depth);
 

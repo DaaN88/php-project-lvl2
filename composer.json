@@ -2,11 +2,13 @@
     "name": "anton-shvedov88/difference_calculator",
     "autoload": {
         "files": [
+            "src/engine.php",
             "src/dataForGendiff.php",
             "src/parsers.php",
             "src/builderAST.php",
-            "src/Formatters/formatAST.php",
-            "src/Formatters/plainFormatter.php"
+            "src/formatters/prettyFormatter.php",
+            "src/formatters/plainFormatter.php",
+            "src/formatters/jsonFormatter.php"
         ]
     },
     "description": "project_2",

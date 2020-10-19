@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions;
+namespace Gendiff\Application\Functions\Parser;
 
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;

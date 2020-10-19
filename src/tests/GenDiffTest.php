@@ -4,21 +4,24 @@ namespace Tests\Functions\GenDiffTest;
 
 use PHPUnit\Framework\TestCase;
 
-use function Gendiff\Application\Functions\genDiff;
+use function Gendiff\Application\Functions\Engine\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    private $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
-    private $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
+    private string $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
+    private string $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
 
-    private $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
-    private $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
+    private string $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
+    private string $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
 
-    private $pathToFileNestedBeforeJson = 'src/tests/fixtures/testFileNestedOne.json';
-    private $pathToFileNestedAfterJson = 'src/tests/fixtures/testFileNestedTwo.json';
+    private string $pathToFileNestedBeforeJson = 'src/tests/fixtures/testFileNestedOne.json';
+    private string $pathToFileNestedAfterJson = 'src/tests/fixtures/testFileNestedTwo.json';
 
     /**
      * @dataProvider additionProviderJson
+     *
+     * @param $expectedValue
+     * @param $actualValue
      */
     public static function testOnEqualsJson($expectedValue, $actualValue): void
     {
@@ -27,6 +30,9 @@ class GenDiffTest extends TestCase
 
     /**
      * @dataProvider additionProviderYml
+     *
+     * @param $expectedValue
+     * @param $actualValue
      */
     public static function testOnEqualsYml($expectedValue, $actualValue): void
     {
@@ -35,6 +41,9 @@ class GenDiffTest extends TestCase
 
     /**
      * @dataProvider additionProviderNestedJson
+     *
+     * @param $expectedValue
+     * @param $actualValue
      */
     public static function testOnNestedEqualsJson($expectedValue, $actualValue): void
     {
@@ -43,12 +52,25 @@ class GenDiffTest extends TestCase
 
     /**
      * @dataProvider additionProviderPlainFormat
+     *
+     * @param $expectedValue
+     * @param $actualValue
      */
     public static function testEqualsPlainFormat($expectedValue, $actualValue): void
     {
         self::assertEquals($expectedValue, $actualValue);
     }
 
+    /**
+     * @dataProvider additionProviderJsonFormat
+     *
+     * @param $expectedValue
+     * @param $actualValue
+     */
+    public static function testEqualsJsonFormat($expectedValue, $actualValue): void
+    {
+        self::assertEquals($expectedValue, $actualValue);
+    }
 
     public function additionProviderJson(): array
     {
@@ -56,7 +78,7 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsFirstTest.txt"
         );
 
-        $actual = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'string');
+        $actual = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'pretty');
 
         return [
             [$expectedData, $actual],
@@ -69,7 +91,7 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsFirstTest.txt"
         );
 
-        $actual = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'string');
+        $actual = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'pretty');
 
         return [
           [$expectedData, $actual],
@@ -82,7 +104,7 @@ class GenDiffTest extends TestCase
             dirname(__DIR__) . "/tests/fixtures/expectedEqualsForNested.txt"
         );
 
-        $actual = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'string');
+        $actual = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'pretty');
 
         return [
             [$expectedData, $actual],
@@ -106,6 +128,31 @@ class GenDiffTest extends TestCase
         $actualNested = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'plain');
         $actualJson = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'plain');
         $actualYml = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'plain');
+
+        return [
+            [$expectedDataNested, $actualNested],
+            [$expectedDataJson, $actualJson],
+            [$expectedDataYml, $actualYml],
+        ];
+    }
+
+    public function additionProviderJsonFormat(): array
+    {
+        $expectedDataNested = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsJsonFormatNested.json"
+        );
+
+        $expectedDataJson = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsJsonFormatForJson.json"
+        );
+
+        $expectedDataYml = file_get_contents(
+            dirname(__DIR__) . "/tests/fixtures/expectedEqualsJsonFormatForYml.json"
+        );
+
+        $actualNested = genDiff($this->pathToFileNestedBeforeJson, $this->pathToFileNestedAfterJson, 'json');
+        $actualJson = genDiff($this->pathToFileBeforeJson, $this->pathToFileAfterJson, 'json');
+        $actualYml = genDiff($this->pathToFileBeforeYml, $this->pathToFileAfterYml, 'json');
 
         return [
             [$expectedDataNested, $actualNested],

@@ -3,21 +3,6 @@
 namespace Gendiff\Application\Functions;
 
 use function Funct\Collection\union;
-use function Gendiff\Application\Functions\FormatAST\formatAST;
-use function Gendiff\Application\Functions\PlainFormatter\getPlainFormat;
-
-function genDiff(string $pathBeforeFile, string $pathAfterFile, string $format)
-{
-    $dataBefore = parsers($pathBeforeFile);
-    $dataAfter = parsers($pathAfterFile);
-
-    if ($format === 'plain') {
-        return getPlainFormat(buildAst($dataBefore, $dataAfter));
-    }
-
-    return formatAst(buildAst($dataBefore, $dataAfter));
-    //print_r(buildAst($dataBefore, $dataAfter));
-}
 
 function buildAst(array $dataBefore, array $dataAfter): array
 {

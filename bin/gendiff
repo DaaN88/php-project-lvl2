@@ -2,7 +2,7 @@
 <?php
 
 use function Gendiff\data\dataForGendiff\getReference;
-use function Gendiff\Application\Functions\genDiff;
+use function Gendiff\Application\Functions\Engine\genDiff;
 
 // Путь который будет использован при глобальной установке пакета
 $autoloadGlobalPath = __DIR__ . '/../../../autoload.php';
@@ -30,4 +30,9 @@ $pathBeforeFile = $result->args['<firstFile>'];
 $pathAfterFile = $result->args['<secondFile>'];
 $format = $result->args['--format'];
 
-echo(genDiff($pathBeforeFile, $pathAfterFile, $format));
+try {
+    echo(genDiff($pathBeforeFile, $pathAfterFile, $format));
+} catch (\RuntimeException $message) {
+    echo $message->getMessage();
+    exit();
+}
