@@ -8,4 +8,6 @@
 Третья проверка работы пакета (сверка вложенных json-файлов; 6-ой шаг):<br/>
 [![asciicast](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ.svg)](https://asciinema.org/a/6pTFf9P7PUN7xA3YpYrTFHtEJ)<br/>
 Четвертая проверка работы пакета (вывод в plain-формате; 7-ой шаг):<br/>
-[![asciicast](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU.svg)](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU)
+[![asciicast](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU.svg)](https://asciinema.org/a/lrOYTPMQKPhzTVvKVDglbUvhU)<br/>
+Пример работы пакета - вывод в формате JSON:<br/>
+[![asciicast](https://asciinema.org/a/wIae2aEXnHjSTlKKj4EmMydvd.svg)](https://asciinema.org/a/wIae2aEXnHjSTlKKj4EmMydvd)
