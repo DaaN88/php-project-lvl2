@@ -8,14 +8,14 @@ use function Gendiff\Application\Functions\Engine\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    private string $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
-    private string $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
+    private $pathToFileBeforeJson = 'src/tests/fixtures/testFileOne.json';
+    private $pathToFileAfterJson = 'src/tests/fixtures/testFileTwo.json';
 
-    private string $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
-    private string $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
+    private $pathToFileBeforeYml = 'src/tests/fixtures/testFileOne.yml';
+    private $pathToFileAfterYml = 'src/tests/fixtures/testFileTwo.yml';
 
-    private string $pathToFileNestedBeforeJson = 'src/tests/fixtures/testFileNestedOne.json';
-    private string $pathToFileNestedAfterJson = 'src/tests/fixtures/testFileNestedTwo.json';
+    private $pathToFileNestedBeforeJson = 'src/tests/fixtures/testFileNestedOne.json';
+    private $pathToFileNestedAfterJson = 'src/tests/fixtures/testFileNestedTwo.json';
 
     /**
      * @dataProvider additionProviderJson
