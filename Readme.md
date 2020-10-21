@@ -6,7 +6,7 @@
 
 <b>Возможности программы:</b> <br/>
 - поддержка разных входных форматов: yaml и json;<br/>
-- генерация отчета в виде plain text, stylish и json;<br/>
+- генерация отчета в виде plain text, pretty и json;<br/>
 
 <b>Установка пакета:</b> <br/>
 - глобально: <code>composer global require anton-shvedov88/difference_calculator</code>;<br/>
