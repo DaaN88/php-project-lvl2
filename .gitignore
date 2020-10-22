@@ -7,7 +7,5 @@ logs
 build
 testFileBefore.json
 testFileAfter.json
-testNestedFileBefore.json
-testNestedFileAfter.json
 testFileAfter.yml
 testFileBefore.yml

@@ -2,7 +2,7 @@
 <?php
 
 use function Gendiff\data\dataForGendiff\getReference;
-use function Gendiff\Application\Functions\Engine\genDiff;
+use function Gendiff\Engine\genDiff\genDiff;
 
 // Путь который будет использован при глобальной установке пакета
 $autoloadGlobalPath = __DIR__ . '/../../../autoload.php';

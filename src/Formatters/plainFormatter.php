@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions\PlainFormatter;
+namespace Gendiff\Formatters\PlainFormatter;
 
 function getPlainFormat($value): string
 {

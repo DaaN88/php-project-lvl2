@@ -6,10 +6,15 @@
             "src/dataForGendiff.php",
             "src/parsers.php",
             "src/builderAST.php",
-            "src/formatters/prettyFormatter.php",
-            "src/formatters/plainFormatter.php",
-            "src/formatters/jsonFormatter.php"
+            "src/Formatters/prettyFormatter.php",
+            "src/Formatters/plainFormatter.php",
+            "src/Formatters/jsonFormatter.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gendiff\\Tests\\": "Tests/"
+        }
     },
     "description": "project_2",
     "type": "project",
@@ -37,7 +42,7 @@
     ],
     "scripts": {
         "phpcs": "phpcs",
-        "test": "phpunit src/tests/GenDiffTest.php"
+        "test": "phpunit Tests/Functions/GenDiffTest.php"
     },
     "prefer-stable": true
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions;
+namespace Gendiff\BuilderAST\buildAst;
 
 use function Funct\Collection\union;
 

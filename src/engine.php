@@ -1,12 +1,12 @@
 <?php
 
-namespace Gendiff\Application\Functions\Engine;
+namespace Gendiff\Engine\genDiff;
 
-use function Gendiff\Application\Functions\PrettyFormatter\getPrettyFormat;
-use function Gendiff\Application\Functions\PlainFormatter\getPlainFormat;
-use function Gendiff\Application\Functions\JsonFormatter\getJsonFormat;
-use function Gendiff\Application\Functions\Parser\parsers;
-use function Gendiff\Application\Functions\buildAst;
+use function Gendiff\Formatters\PrettyFormatter\getPrettyFormat;
+use function Gendiff\Formatters\PlainFormatter\getPlainFormat;
+use function Gendiff\Formatters\JsonFormatter\getJsonFormat;
+use function Gendiff\Parser\parsers\parsers;
+use function Gendiff\BuilderAST\buildAst\buildAst;
 
 function genDiff(string $pathBeforeFile, string $pathAfterFile, string $format): string
 {
@@ -18,7 +18,7 @@ function genDiff(string $pathBeforeFile, string $pathAfterFile, string $format):
     return choiceFormatter($format, $ast);
 }
 
-function choiceFormatter(string $format, $ast)
+function choiceFormatter(string $format, array $ast): string
 {
     switch ($format) {
         case 'plain':

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions\JsonFormatter;
+namespace Gendiff\Formatters\JsonFormatter;
 
 function getJsonFormat(array $astTree): string
 {

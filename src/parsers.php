@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions\Parser;
+namespace Gendiff\Parser\parsers;
 
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
@@ -16,7 +16,7 @@ function parsers(string $pathFile): array
         }
 
         if ($info === 'yml') {
-            $data = Yaml::parseFile($pathFile, Yaml::PARSE_OBJECT_FOR_MAP);
+            $data = Yaml::parseFile($pathFile);
         }
     } catch (RuntimeException $msg) {
         echo $msg->getMessage();

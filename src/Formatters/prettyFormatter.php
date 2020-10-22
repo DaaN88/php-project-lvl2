@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\Application\Functions\PrettyFormatter;
+namespace Gendiff\Formatters\PrettyFormatter;
 
 function getPrettyFormat($value, int $depth = 0): string
 {
