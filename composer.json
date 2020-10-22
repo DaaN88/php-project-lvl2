@@ -9,11 +9,10 @@
             "src/Formatters/prettyFormatter.php",
             "src/Formatters/plainFormatter.php",
             "src/Formatters/jsonFormatter.php"
-        ]
-    },
-    "autoload-dev": {
+        ],
         "psr-4": {
-            "Gendiff\\Tests\\": "Tests/"
+            "Gendiff\\": "src",
+            "Gendiff\\Tests\\": "Tests"
         }
     },
     "description": "project_2",
@@ -42,7 +41,7 @@
     ],
     "scripts": {
         "phpcs": "phpcs",
-        "test": "phpunit Tests/Functions/GenDiffTest.php"
+        "test": "phpunit Tests"
     },
     "prefer-stable": true
 }
