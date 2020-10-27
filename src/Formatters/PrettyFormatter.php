@@ -2,9 +2,11 @@
 
 namespace Gendiff\Formatters\PrettyFormatter;
 
-function getPrettyFormat($value, int $depth = 0): string
+use InvalidArgumentException;
+
+function getPrettyFormat($value): string
 {
-    $indent = getIndents($depth);
+    $indent = getIndents(0);
 
     $iteratingOverArrays = static function (
         $currentValues,
@@ -31,7 +33,7 @@ function getPrettyFormat($value, int $depth = 0): string
                         case 'added':
                             $buffer[] = $indent
                                 .
-                                " + "
+                                "  + "
                                 .
                                 $keyOfValue
                                 .
@@ -42,7 +44,7 @@ function getPrettyFormat($value, int $depth = 0): string
                         case 'deleted':
                             $buffer[] = $indent
                                 .
-                                " - "
+                                "  - "
                                 .
                                 $keyOfValue
                                 .
@@ -51,7 +53,7 @@ function getPrettyFormat($value, int $depth = 0): string
                                 valueToString($currentValues[$keyOfValue]['value'], $indent);
                             break;
                         case 'nested':
-                            $buffer[] = $indent . "   " . $keyOfValue . ": {";
+                            $buffer[] = $indent . "    " . $keyOfValue . ": {";
 
                             $newIndent = $indent . getIndents($depth + 2);
 
@@ -63,12 +65,12 @@ function getPrettyFormat($value, int $depth = 0): string
 
                             $buffer = array_merge($buffer, $goInDepth);
 
-                            $buffer[] = $indent . "   " . "}";
+                            $buffer[] = $indent . "    " . "}";
                             break;
                         case 'unchanged':
                             $buffer[] = $indent
                                 .
-                                "   "
+                                "    "
                                 .
                                 $keyOfValue
                                 .
@@ -79,7 +81,7 @@ function getPrettyFormat($value, int $depth = 0): string
                         case 'changed':
                             $buffer[] = $indent
                                 .
-                                " - "
+                                "  - "
                                 .
                                 $keyOfValue
                                 .
@@ -89,7 +91,7 @@ function getPrettyFormat($value, int $depth = 0): string
 
                             $buffer[] = $indent
                                 .
-                                " + "
+                                "  + "
                                 .
                                 $keyOfValue
                                 .
@@ -97,6 +99,8 @@ function getPrettyFormat($value, int $depth = 0): string
                                 .
                                 valueToString($currentValues[$keyOfValue]['newValue'], $indent);
                             break;
+                        default:
+                            throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
                     }
                 }
 
@@ -106,7 +110,7 @@ function getPrettyFormat($value, int $depth = 0): string
         );
     };
 
-    $result = $iteratingOverArrays($value, $indent, $depth);
+    $result = $iteratingOverArrays($value, $indent, 0);
 
     $result = array_merge(["{"], $result, ["}"]);
 
@@ -126,49 +130,31 @@ function valueToString($value, $indent): string
     return (string)$value;
 }
 
-function arrayToString($array, $indent)
+function arrayToString(array $array, $indent): string
 {
-    $iter = static function (
-        $currentValues,
-        $indent
-    ) use (&$iter) {
-        return array_reduce(
-            array_keys($currentValues),
-            static function (
-                $accum,
-                $keyOfValue
-            ) use (
-                $iter,
-                $currentValues,
-                $indent
-            ) {
-                $newIndent = $indent . getIndents(2);
+    $indent .= '    ';
 
-                if (is_array($currentValues[$keyOfValue])) {
-                    $buffer[] = $newIndent . $keyOfValue . ": {";
+    $temp = array_reduce(
+        array_keys($array),
+        static function (
+            $accum,
+            $key
+        ) use (
+            $array,
+            $indent
+        ) {
+            $value = valueToString($array[$key], $indent);
 
-                    $goInDepth = $iter(
-                        $currentValues[$keyOfValue],
-                        $newIndent
-                    );
-                    $buffer = array_merge($buffer, $goInDepth);
+            $buffer[] = $indent . $key . ": " . $value;
 
-                    $buffer[] = $newIndent . "}";
-                } else {
-                    $valueLikeString = $currentValues[$keyOfValue];
+            return array_merge($accum, $buffer);
+        },
+        []
+    );
 
-                    $buffer[] = "{$newIndent}{$keyOfValue}: {$valueLikeString}";
-                }
-
-                return array_merge($accum, $buffer);
-            },
-            []
-        );
-    };
-
-    $result = $iter($array, $indent);
-
-    $result = array_merge(["{"], $result, [$indent . "   " . "}"]);
+    $result[] = "{";
+    $result[] = implode("\n", array_map(static fn($line) => "    $line", $temp));
+    $result[] = $indent . "}";
 
     return implode("\n", $result);
 }

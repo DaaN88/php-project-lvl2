@@ -1,24 +1,24 @@
 <?php
 
-namespace Gendiff\Engine\genDiff;
+namespace Gendiff\Engine;
 
 use function Gendiff\Formatters\PrettyFormatter\getPrettyFormat;
 use function Gendiff\Formatters\PlainFormatter\getPlainFormat;
 use function Gendiff\Formatters\JsonFormatter\getJsonFormat;
-use function Gendiff\Parser\parsers\parsers;
-use function Gendiff\BuilderAST\buildAst\buildAst;
+use function Gendiff\Parsers\parse;
+use function Gendiff\BuilderAST\buildAst;
 
 function genDiff(string $pathBeforeFile, string $pathAfterFile, string $format): string
 {
-    $dataBefore = parsers($pathBeforeFile);
-    $dataAfter = parsers($pathAfterFile);
+    $dataBefore = parse($pathBeforeFile);
+    $dataAfter = parse($pathAfterFile);
 
     $ast = buildAst($dataBefore, $dataAfter);
 
-    return choiceFormatter($format, $ast);
+    return getStringRepresentation($format, $ast);
 }
 
-function choiceFormatter(string $format, array $ast): string
+function getStringRepresentation(string $format, array $ast): string
 {
     switch ($format) {
         case 'plain':
@@ -28,6 +28,6 @@ function choiceFormatter(string $format, array $ast): string
         case 'pretty':
             return getPrettyFormat($ast);
         default:
-            throw new \RuntimeException("Wrong format! Terminated.");
+            throw new \InvalidArgumentException("Wrong format: {$format}. Terminated.");
     }
 }

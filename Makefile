@@ -3,8 +3,8 @@ install:
 autoload:
 	composer dump-autoload
 lint:
-	composer run-script phpcs -- --standard=PSR12 src bin Tests
+	composer run-script phpcs -- --standard=PSR12 src bin tests
 test:
-	composer exec --verbose phpunit Tests
+	composer exec --verbose phpunit tests
 test-coverage:
-	composer exec --verbose phpunit Tests -- --coverage-clover build/logs/clover.xml
+	composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml

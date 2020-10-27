@@ -2,17 +2,16 @@
     "name": "anton-shvedov88/difference_calculator",
     "autoload": {
         "files": [
-            "src/engine.php",
-            "src/dataForGendiff.php",
-            "src/parsers.php",
-            "src/builderAST.php",
-            "src/Formatters/prettyFormatter.php",
-            "src/Formatters/plainFormatter.php",
-            "src/Formatters/jsonFormatter.php"
+            "src/Engine.php",
+            "src/Parsers.php",
+            "src/BuilderAST.php",
+            "src/Formatters/PrettyFormatter.php",
+            "src/Formatters/PlainFormatter.php",
+            "src/Formatters/JsonFormatter.php"
         ],
         "psr-4": {
             "Gendiff\\": "src",
-            "Gendiff\\Tests\\": "Tests"
+            "Gendiff\\Tests\\": "tests"
         }
     },
     "description": "project_2",
@@ -29,7 +28,8 @@
         "docopt/docopt": "^1.0",
         "ext-json": "*",
         "symfony/yaml": "*",
-        "funct/funct": "^1.5"
+        "funct/funct": "^1.5",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
@@ -41,7 +41,7 @@
     ],
     "scripts": {
         "phpcs": "phpcs",
-        "test": "phpunit Tests"
+        "test": "phpunit tests"
     },
     "prefer-stable": true
 }

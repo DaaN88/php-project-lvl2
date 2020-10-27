@@ -6,52 +6,52 @@ function getPlainFormat($value): string
 {
     $iter = static function (
         $currentValues,
-        $currentKey
+        $currentPath
     ) use (&$iter) {
         return array_reduce(
             array_keys($currentValues),
             static function (
                 $accum,
-                $keyOfValue
+                $path
             ) use (
                 $iter,
                 $currentValues,
-                $currentKey
+                $currentPath
             ) {
                 $buffer = [];
 
-                if (array_key_exists('status', $currentValues[$keyOfValue])) {
-                    $status = $currentValues[$keyOfValue]['status'];
+                if (array_key_exists('status', $currentValues[$path])) {
+                    $status = $currentValues[$path]['status'];
 
                     switch ($status) {
                         case 'added':
                             $buffer[] = "Property '"
                                 .
-                                $currentKey
+                                $currentPath
                                 .
-                                $keyOfValue
+                                $path
                                 .
                                 "' was added with value: '"
                                 .
-                                valueToString($currentValues[$keyOfValue]['value'])
+                                valueToString($currentValues[$path]['value'])
                                 .
                                 "'";
                             break;
                         case 'deleted':
                             $buffer[] = "Property '"
                                 .
-                                $currentKey
+                                $currentPath
                                 .
-                                $keyOfValue
+                                $path
                                 .
                                 "' was removed";
                             break;
                         case 'nested':
-                            $currentKey .= $keyOfValue . ".";
+                            $currentPath .= $path . ".";
 
                             $goInDepth = $iter(
-                                $currentValues[$keyOfValue]['nested structure'],
-                                $currentKey
+                                $currentValues[$path]['nested structure'],
+                                $currentPath
                             );
 
                             $buffer = array_merge($buffer, $goInDepth);
@@ -59,20 +59,24 @@ function getPlainFormat($value): string
                         case 'changed':
                             $buffer[] = "Property '"
                                 .
-                                $currentKey
+                                $currentPath
                                 .
-                                $keyOfValue
+                                $path
                                 .
                                 "' was updated. From '"
                                 .
-                                valueToString($currentValues[$keyOfValue]['oldValue'])
+                                valueToString($currentValues[$path]['oldValue'])
                                 .
                                 "' to '"
                                 .
-                                valueToString($currentValues[$keyOfValue]['newValue'])
+                                valueToString($currentValues[$path]['newValue'])
                                 .
                                 "'";
                             break;
+                        case 'unchanged':
+                            break;
+                        default:
+                            throw new \InvalidArgumentException("Unknown status: {$status}. Terminated.");
                     }
                 }
 

@@ -1,8 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use function Gendiff\data\dataForGendiff\getReference;
-use function Gendiff\Engine\genDiff\genDiff;
+use function Gendiff\Engine\genDiff;
 
 // Путь который будет использован при глобальной установке пакета
 $autoloadGlobalPath = __DIR__ . '/../../../autoload.php';
@@ -15,16 +14,21 @@ if (file_exists($autoloadGlobalPath)) {
     require_once $autoloadLocalPath;
 }
 
-$doc = getReference();
+$doc = <<<DOCOPT
+    Generate diff
+    
+    Usage:
+        gendiff (-h|--help)
+        gendiff (-v|--version)
+        gendiff [--format <fmt>] <firstFile> <secondFile>
+    
+    Options:
+        -h --help                     Show this screen
+        -v --version                  Show version
+        --format <fmt>                Report format [default: pretty]
+    DOCOPT;
 
-$params = [
-  'argv'=>array_slice($_SERVER['argv'], 1),
-  'help' => true,
-  'version' => 'Generate diff',
-  'optionsFirst' => false,
-];
-
-$result = Docopt::handle($doc, $params);
+$result = Docopt::handle($doc);
 
 $pathBeforeFile = $result->args['<firstFile>'];
 $pathAfterFile = $result->args['<secondFile>'];
@@ -32,7 +36,6 @@ $format = $result->args['--format'];
 
 try {
     echo(genDiff($pathBeforeFile, $pathAfterFile, $format));
-} catch (\RuntimeException $message) {
+} catch (\Exception $message) {
     echo $message->getMessage();
-    exit();
 }
