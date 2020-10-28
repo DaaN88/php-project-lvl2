@@ -134,7 +134,7 @@ function arrayToString(array $array, $indent): string
 {
     $indent .= '    ';
 
-    $temp = array_reduce(
+    $strings = array_reduce(
         array_keys($array),
         static function (
             $accum,
@@ -153,7 +153,7 @@ function arrayToString(array $array, $indent): string
     );
 
     $result[] = "{";
-    $result[] = implode("\n", array_map(static fn($line) => "    $line", $temp));
+    $result[] = implode("\n", array_map(static fn($line) => "    $line", $strings));
     $result[] = $indent . "}";
 
     return implode("\n", $result);

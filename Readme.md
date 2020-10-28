@@ -14,7 +14,7 @@
 <code>composer global require anton-shvedov88/difference_calculator:master-dev</code> <br/>
 
 <b>Требования:</b><br/>
-- php-version: от 7.0;<br/>
+- php-version: от 7.4;<br/>
 - composer-version: от 1.10.6;<br/>
 
 <b>Примеры работы пакета:</b> <br/>
