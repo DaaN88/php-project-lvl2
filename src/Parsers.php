@@ -12,7 +12,7 @@ function parse(string $filePath): array
 
     switch ($fileExtension) {
         case 'json':
-            $data = json_decode(readFile($filePath), true, 512,JSON_THROW_ON_ERROR);
+            $data = json_decode(readFile($filePath), true, 512, JSON_THROW_ON_ERROR);
             break;
         case 'yaml':
         case 'yml':
