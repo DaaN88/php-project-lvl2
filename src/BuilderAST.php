@@ -15,31 +15,26 @@ function buildAst(array $dataBefore, array $dataAfter): array
             $dataBefore,
             $dataAfter
         ) {
-            $buffer = [];
-
             if (!array_key_exists($sharedKey, $dataAfter)) {
                 $oldValue = $dataBefore[$sharedKey];
 
-                $buffer[$sharedKey] = ['value' => $oldValue, 'status' => 'deleted'];
-
-                return array_merge($carry, $buffer);
+                $carry[$sharedKey] = ['value' => $oldValue, 'status' => 'deleted'];
+                return $carry;
             }
 
             if (!array_key_exists($sharedKey, $dataBefore)) {
                 $newValue = $dataAfter[$sharedKey];
 
-                $buffer[$sharedKey] = ['value' => $newValue, 'status' => 'added'];
-
-                return array_merge($carry, $buffer);
+                $carry[$sharedKey] = ['value' => $newValue, 'status' => 'added'];
+                return $carry;
             }
 
             $oldValue = $dataBefore[$sharedKey];
             $newValue = $dataAfter[$sharedKey];
 
             if ($oldValue === $newValue) {
-                $buffer[$sharedKey] = ['value' => $oldValue, 'status' => 'unchanged'];
-
-                return array_merge($carry, $buffer);
+                $carry[$sharedKey] = ['value' => $oldValue, 'status' => 'unchanged'];
+                return $carry;
             }
 
             if (is_array($oldValue) && is_array($newValue)) {
@@ -48,18 +43,17 @@ function buildAst(array $dataBefore, array $dataAfter): array
                     $newValue
                 );
 
-                $buffer[$sharedKey] = ['nested structure' => $goInDepth, 'status' => 'nested'];
-
-                return array_merge($carry, $buffer);
+                $carry[$sharedKey] = ['nested structure' => $goInDepth, 'status' => 'nested'];
+                return $carry;
             }
 
-            $buffer[$sharedKey] = [
+            $carry[$sharedKey] = [
                 'oldValue' => $oldValue,
                 'newValue' => $newValue,
                 'status' => 'changed',
             ];
 
-            return array_merge($carry, $buffer);
+            return $carry;
         },
         []
     );

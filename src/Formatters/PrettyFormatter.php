@@ -4,30 +4,26 @@ namespace Gendiff\Formatters\PrettyFormatter;
 
 use InvalidArgumentException;
 
-function getPrettyFormat($value): string
+function getPrettyFormat(array $treeAST): string
 {
-    $indent = getIndents(0);
-
     $iteratingOverArrays = static function (
         $currentValues,
-        $indent,
-        $depth
+        $indent
     ) use (&$iteratingOverArrays) {
         return array_reduce(
             array_keys($currentValues),
             static function (
                 $accum,
-                $keyOfValue
+                $key
             ) use (
                 $iteratingOverArrays,
                 $currentValues,
-                $indent,
-                $depth
+                $indent
             ) {
                 $buffer = [];
 
-                if (array_key_exists('status', $currentValues[$keyOfValue])) {
-                    $status = $currentValues[$keyOfValue]['status'];
+                if (array_key_exists('status', $currentValues[$key])) {
+                    $status = $currentValues[$key]['status'];
 
                     switch ($status) {
                         case 'added':
@@ -35,32 +31,31 @@ function getPrettyFormat($value): string
                                 .
                                 "  + "
                                 .
-                                $keyOfValue
+                                $key
                                 .
                                 ": "
                                 .
-                                valueToString($currentValues[$keyOfValue]['value'], $indent);
+                                valueToString($currentValues[$key]['value'], $indent);
                             break;
                         case 'deleted':
                             $buffer[] = $indent
                                 .
                                 "  - "
                                 .
-                                $keyOfValue
+                                $key
                                 .
                                 ": "
                                 .
-                                valueToString($currentValues[$keyOfValue]['value'], $indent);
+                                valueToString($currentValues[$key]['value'], $indent);
                             break;
                         case 'nested':
-                            $buffer[] = $indent . "    " . $keyOfValue . ": {";
+                            $buffer[] = $indent . "    " . $key . ": {";
 
-                            $newIndent = $indent . getIndents($depth + 2);
+                            $newIndent = $indent . '    ';
 
                             $goInDepth = $iteratingOverArrays(
-                                $currentValues[$keyOfValue]['nested structure'],
-                                $newIndent,
-                                $depth
+                                $currentValues[$key]['nested structure'],
+                                $newIndent
                             );
 
                             $buffer = array_merge($buffer, $goInDepth);
@@ -72,32 +67,32 @@ function getPrettyFormat($value): string
                                 .
                                 "    "
                                 .
-                                $keyOfValue
+                                $key
                                 .
                                 ": "
                                 .
-                                valueToString($currentValues[$keyOfValue]['value'], $indent);
+                                valueToString($currentValues[$key]['value'], $indent);
                             break;
                         case 'changed':
                             $buffer[] = $indent
                                 .
                                 "  - "
                                 .
-                                $keyOfValue
+                                $key
                                 .
                                 ": "
                                 .
-                                valueToString($currentValues[$keyOfValue]['oldValue'], $indent);
+                                valueToString($currentValues[$key]['oldValue'], $indent);
 
                             $buffer[] = $indent
                                 .
                                 "  + "
                                 .
-                                $keyOfValue
+                                $key
                                 .
                                 ": "
                                 .
-                                valueToString($currentValues[$keyOfValue]['newValue'], $indent);
+                                valueToString($currentValues[$key]['newValue'], $indent);
                             break;
                         default:
                             throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
@@ -110,14 +105,14 @@ function getPrettyFormat($value): string
         );
     };
 
-    $result = $iteratingOverArrays($value, $indent, 0);
+    $result = $iteratingOverArrays($treeAST, '');
 
     $result = array_merge(["{"], $result, ["}"]);
 
     return implode("\n", $result);
 }
 
-function valueToString($value, $indent): string
+function valueToString($value, string $indent): string //$value - type mixed
 {
     if (is_array($value)) {
         return arrayToString($value, $indent);
@@ -130,7 +125,7 @@ function valueToString($value, $indent): string
     return (string)$value;
 }
 
-function arrayToString(array $array, $indent): string
+function arrayToString(array $array, string $indent): string
 {
     $indent .= '    ';
 
@@ -145,9 +140,9 @@ function arrayToString(array $array, $indent): string
         ) {
             $value = valueToString($array[$key], $indent);
 
-            $buffer[] = $indent . $key . ": " . $value;
+            $accum[] = $indent . $key . ": " . $value;
 
-            return array_merge($accum, $buffer);
+            return $accum;
         },
         []
     );
@@ -157,9 +152,4 @@ function arrayToString(array $array, $indent): string
     $result[] = $indent . "}";
 
     return implode("\n", $result);
-}
-
-function getIndents(int $depth): string
-{
-    return str_repeat(' ', 2 * $depth);
 }

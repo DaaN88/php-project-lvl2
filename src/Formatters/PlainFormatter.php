@@ -2,96 +2,94 @@
 
 namespace Gendiff\Formatters\PlainFormatter;
 
-function getPlainFormat($value): string
+use InvalidArgumentException;
+
+function getPlainFormat(array $treeAST): string
 {
     $iter = static function (
-        $currentValues,
-        $currentPath
+        $valuesOfTree,
+        $currentKey
     ) use (&$iter) {
         return array_reduce(
-            array_keys($currentValues),
+            array_keys($valuesOfTree),
             static function (
-                $accum,
-                $path
+                $lines,
+                $key
             ) use (
                 $iter,
-                $currentValues,
-                $currentPath
+                $valuesOfTree,
+                $currentKey
             ) {
-                $buffer = [];
-
-                if (array_key_exists('status', $currentValues[$path])) {
-                    $status = $currentValues[$path]['status'];
+                if (array_key_exists('status', $valuesOfTree[$key])) {
+                    $status = $valuesOfTree[$key]['status'];
 
                     switch ($status) {
                         case 'added':
-                            $buffer[] = "Property '"
+                            $lines[] = "Property '"
                                 .
-                                $currentPath
+                                $currentKey
                                 .
-                                $path
+                                $key
                                 .
                                 "' was added with value: '"
                                 .
-                                valueToString($currentValues[$path]['value'])
+                                valueToString($valuesOfTree[$key]['value'])
                                 .
                                 "'";
                             break;
                         case 'deleted':
-                            $buffer[] = "Property '"
+                            $lines[] = "Property '"
                                 .
-                                $currentPath
+                                $currentKey
                                 .
-                                $path
+                                $key
                                 .
                                 "' was removed";
                             break;
                         case 'nested':
-                            $currentPath .= $path . ".";
+                            $currentKey .= $key . ".";
 
                             $goInDepth = $iter(
-                                $currentValues[$path]['nested structure'],
-                                $currentPath
+                                $valuesOfTree[$key]['nested structure'],
+                                $currentKey
                             );
 
-                            $buffer = array_merge($buffer, $goInDepth);
+                            $lines = array_merge($lines, $goInDepth);
                             break;
                         case 'changed':
-                            $buffer[] = "Property '"
+                            $lines[] = "Property '"
                                 .
-                                $currentPath
+                                $currentKey
                                 .
-                                $path
+                                $key
                                 .
                                 "' was updated. From '"
                                 .
-                                valueToString($currentValues[$path]['oldValue'])
+                                valueToString($valuesOfTree[$key]['oldValue'])
                                 .
                                 "' to '"
                                 .
-                                valueToString($currentValues[$path]['newValue'])
+                                valueToString($valuesOfTree[$key]['newValue'])
                                 .
                                 "'";
                             break;
-                        case 'unchanged':
+                        default: // processing state unchanged. Needed act: nothing
                             break;
-                        default:
-                            throw new \InvalidArgumentException("Unknown status: {$status}. Terminated.");
                     }
                 }
 
-                return array_merge($accum, $buffer);
+                return $lines;
             },
             []
         );
     };
 
-    $result = $iter($value, '');
+    $result = $iter($treeAST, '');
 
     return implode("\n", $result);
 }
 
-function valueToString($value): string
+function valueToString($value): string //$value - type mixed
 {
     if (is_array($value)) {
         return "[complex value]";
