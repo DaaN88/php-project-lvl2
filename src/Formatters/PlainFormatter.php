@@ -20,62 +20,62 @@ function getPlainFormat(array $treeAST): string
                 $valuesOfTree,
                 $currentKey
             ) {
-                if (array_key_exists('status', $valuesOfTree[$key])) {
-                    $status = $valuesOfTree[$key]['status'];
+                $status = $valuesOfTree[$key]['status'];
 
-                    switch ($status) {
-                        case 'added':
-                            $lines[] = "Property '"
-                                .
-                                $currentKey
-                                .
-                                $key
-                                .
-                                "' was added with value: '"
-                                .
-                                valueToString($valuesOfTree[$key]['value'])
-                                .
-                                "'";
-                            break;
-                        case 'deleted':
-                            $lines[] = "Property '"
-                                .
-                                $currentKey
-                                .
-                                $key
-                                .
-                                "' was removed";
-                            break;
-                        case 'nested':
-                            $currentKey .= $key . ".";
+                switch ($status) {
+                    case 'added':
+                        $lines[] = "Property '"
+                          .
+                          $currentKey
+                          .
+                          $key
+                          .
+                          "' was added with value: '"
+                          .
+                          valueToString($valuesOfTree[$key]['value'])
+                          .
+                          "'";
+                        break;
+                    case 'deleted':
+                        $lines[] = "Property '"
+                          .
+                          $currentKey
+                          .
+                          $key
+                          .
+                          "' was removed";
+                        break;
+                    case 'nested':
+                        $currentKey .= $key . ".";
 
-                            $goInDepth = $iter(
-                                $valuesOfTree[$key]['nested structure'],
-                                $currentKey
-                            );
+                        $goInDepth = $iter(
+                            $valuesOfTree[$key]['nested structure'],
+                            $currentKey
+                        );
 
-                            $lines = array_merge($lines, $goInDepth);
-                            break;
-                        case 'changed':
-                            $lines[] = "Property '"
-                                .
-                                $currentKey
-                                .
-                                $key
-                                .
-                                "' was updated. From '"
-                                .
-                                valueToString($valuesOfTree[$key]['oldValue'])
-                                .
-                                "' to '"
-                                .
-                                valueToString($valuesOfTree[$key]['newValue'])
-                                .
-                                "'";
-                            break;
-                        default: // processing state unchanged. Needed act: nothing
-                            break;
-                    }
+                        $lines = array_merge($lines, $goInDepth);
+                        break;
+                    case 'changed':
+                        $lines[] = "Property '"
+                          .
+                          $currentKey
+                          .
+                          $key
+                          .
+                          "' was updated. From '"
+                          .
+                          valueToString($valuesOfTree[$key]['oldValue'])
+                          .
+                          "' to '"
+                          .
+                          valueToString($valuesOfTree[$key]['newValue'])
+                          .
+                          "'";
+                        break;
+                    case 'unchanged':
+                        break;
+                    default:
+                        throw new \Exception("Unknown status: {$status}. Terminated.");
                 }
 
                 return $lines;

@@ -1,5 +1,7 @@
+update:
+	composer update
 install:
-	composer update && composer install
+	composer install
 autoload:
 	composer dump-autoload
 lint:

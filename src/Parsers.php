@@ -28,12 +28,14 @@ function parse(string $filePath): array
 function readFile(string $filePath): string
 {
     if (!file_exists($filePath)) {
-        throw new InvalidArgumentException('File (one or more) doesn\'t exist');
+        throw new InvalidArgumentException("File: {$filePath} doesn\'t exist");
     }
 
-    if (!file_get_contents($filePath)) {
-        throw new Exception("Can't read file! Terminated");
+    $dataFile = file_get_contents($filePath);
+
+    if ($dataFile === false) {
+        throw new Exception("Can't read file: {$dataFile}! Terminated");
     }
 
-    return file_get_contents($filePath);
+    return $dataFile;
 }
