@@ -6,14 +6,14 @@ use InvalidArgumentException;
 
 function getPrettyFormat(array $ast): string
 {
-    $result = iteratingOverArrays($ast, '');
+    $result = getLines($ast, '');
 
     $result = array_merge(["{"], $result, ["}"]);
 
     return implode("\n", $result);
 }
 
-function iteratingOverArrays($ast, $indent)
+function getLines(array $ast, string $indent): array
 {
     return array_reduce(
         array_keys($ast),
@@ -42,7 +42,7 @@ function iteratingOverArrays($ast, $indent)
 
                     $newIndent = "{$indent}    ";
 
-                    $goInDepth = iteratingOverArrays(
+                    $goInDepth = getLines(
                         $ast[$key]['children'],
                         $newIndent
                     );
