@@ -4,36 +4,36 @@ namespace Gendiff\Formatters\PrettyFormatter;
 
 use InvalidArgumentException;
 
-function getPrettyFormat(array $treeAST): string
+function getPrettyFormat(array $ast): string
 {
-    $result = iteratingOverArrays($treeAST, '');
+    $result = iteratingOverArrays($ast, '');
 
     $result = array_merge(["{"], $result, ["}"]);
 
     return implode("\n", $result);
 }
 
-function iteratingOverArrays($currentValues, $indent)
+function iteratingOverArrays($ast, $indent)
 {
     return array_reduce(
-        array_keys($currentValues),
+        array_keys($ast),
         static function (
             $accum,
             $key
         ) use (
-            $currentValues,
+            $ast,
             $indent
         ) {
-            $status = $currentValues[$key]['status'];
+            $status = $ast[$key]['status'];
 
             switch ($status) {
                 case 'added':
-                    $value = valueToString($currentValues[$key]['value'], $indent);
+                    $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}  + {$key}: {$value}";
                     break;
                 case 'deleted':
-                    $value = valueToString($currentValues[$key]['value'], $indent);
+                    $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}  - {$key}: {$value}";
                     break;
@@ -43,7 +43,7 @@ function iteratingOverArrays($currentValues, $indent)
                     $newIndent = "{$indent}    ";
 
                     $goInDepth = iteratingOverArrays(
-                        $currentValues[$key]['children'],
+                        $ast[$key]['children'],
                         $newIndent
                     );
 
@@ -52,13 +52,13 @@ function iteratingOverArrays($currentValues, $indent)
                     $accum[] = "{$indent}    }";
                     break;
                 case 'unchanged':
-                    $value = valueToString($currentValues[$key]['value'], $indent);
+                    $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}    {$key}: {$value}";
                     break;
                 case 'changed':
-                    $oldValue = valueToString($currentValues[$key]['oldValue'], $indent);
-                    $newValue = valueToString($currentValues[$key]['newValue'], $indent);
+                    $oldValue = valueToString($ast[$key]['oldValue'], $indent);
+                    $newValue = valueToString($ast[$key]['newValue'], $indent);
 
                     $accum[] = "{$indent}  - {$key}: $oldValue";
 
