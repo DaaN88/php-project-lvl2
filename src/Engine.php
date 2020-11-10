@@ -5,20 +5,20 @@ namespace Gendiff\Engine;
 use function Gendiff\Formatters\PrettyFormatter\getPrettyFormat;
 use function Gendiff\Formatters\PlainFormatter\getPlainFormat;
 use function Gendiff\Formatters\JsonFormatter\getJsonFormat;
-use function Gendiff\Parsers\parse;
-use function Gendiff\BuilderAST\buildAst;
+use function Gendiff\Parser\parse;
+use function Gendiff\ASTBuilder\buildAst;
 
-function genDiff(string $pathBeforeFile, string $pathAfterFile, string $format): string
+function genDiff(string $filePrevVerPath, string $fileNewVerPath, string $format): string
 {
-    $dataBefore = parse($pathBeforeFile);
-    $dataAfter = parse($pathAfterFile);
+    $dataBefore = parse($filePrevVerPath);
+    $dataAfter = parse($fileNewVerPath);
 
     $ast = buildAst($dataBefore, $dataAfter);
 
-    return getStringRepresentation($format, $ast);
+    return render($format, $ast);
 }
 
-function getStringRepresentation(string $format, array $ast): string
+function render(string $format, array $ast): string
 {
     switch ($format) {
         case 'plain':

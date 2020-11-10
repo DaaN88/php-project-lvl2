@@ -2,8 +2,6 @@
 
 namespace Gendiff\Formatters\PlainFormatter;
 
-use InvalidArgumentException;
-
 function getPlainFormat(array $treeAST): string
 {
     $iter = static function (
@@ -24,53 +22,28 @@ function getPlainFormat(array $treeAST): string
 
                 switch ($status) {
                     case 'added':
-                        $lines[] = "Property '"
-                          .
-                          $currentKey
-                          .
-                          $key
-                          .
-                          "' was added with value: '"
-                          .
-                          valueToString($valuesOfTree[$key]['value'])
-                          .
-                          "'";
+                        $value = valueToString($valuesOfTree[$key]['value']);
+
+                        $lines[] = "Property '{$currentKey}{$key}' was added with value: '{$value}'";
                         break;
                     case 'deleted':
-                        $lines[] = "Property '"
-                          .
-                          $currentKey
-                          .
-                          $key
-                          .
-                          "' was removed";
+                        $lines[] = "Property '{$currentKey}{$key}' was removed";
                         break;
-                    case 'nested':
-                        $currentKey .= $key . ".";
+                    case 'children':
+                        $currentKey .= "{$key}.";
 
                         $goInDepth = $iter(
-                            $valuesOfTree[$key]['nested structure'],
+                            $valuesOfTree[$key]['children'],
                             $currentKey
                         );
 
                         $lines = array_merge($lines, $goInDepth);
                         break;
                     case 'changed':
-                        $lines[] = "Property '"
-                          .
-                          $currentKey
-                          .
-                          $key
-                          .
-                          "' was updated. From '"
-                          .
-                          valueToString($valuesOfTree[$key]['oldValue'])
-                          .
-                          "' to '"
-                          .
-                          valueToString($valuesOfTree[$key]['newValue'])
-                          .
-                          "'";
+                        $oldValue = valueToString($valuesOfTree[$key]['oldValue']);
+                        $newValue = valueToString($valuesOfTree[$key]['newValue']);
+
+                        $lines[] = "Property '{$currentKey}{$key}' was updated. From '{$oldValue}' to '{$newValue}'";
                         break;
                     case 'unchanged':
                         break;

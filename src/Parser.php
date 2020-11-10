@@ -1,10 +1,11 @@
 <?php
 
-namespace Gendiff\Parsers;
+namespace Gendiff\Parser;
 
-use Exception;
 use InvalidArgumentException;
 use Symfony\Component\Yaml\Yaml;
+
+use function Gendiff\ReadFile\readFile;
 
 function parse(string $filePath): array
 {
@@ -23,19 +24,4 @@ function parse(string $filePath): array
     }
 
     return $data;
-}
-
-function readFile(string $filePath): string
-{
-    if (!file_exists($filePath)) {
-        throw new InvalidArgumentException("File: {$filePath} doesn\'t exist");
-    }
-
-    $dataFile = file_get_contents($filePath);
-
-    if ($dataFile === false) {
-        throw new Exception("Can't read file: {$dataFile}! Terminated");
-    }
-
-    return $dataFile;
 }

@@ -2,85 +2,78 @@
 
 namespace Gendiff\Tests;
 
-use http\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 
 use function Gendiff\Engine\genDiff;
+use function Gendiff\ReadFile\readFile;
 
 class GenDiffTest extends TestCase
 {
-    private $pathToFileBeforeJson = __DIR__ . '/fixtures/testFileNestedOne.json';
-    private $pathToFileAfterJson = __DIR__ . '/fixtures/testFileNestedTwo.json';
-
-    private $pathToFileBeforeYml = __DIR__ . '/fixtures/testFileNestedOne.yml';
-    private $pathToFileAfterYml = __DIR__ . '/fixtures/testFileNestedTwo.yml';
-
-    private $pathToFileExpectedJsonFormat = __DIR__ . "/fixtures/expectedJsonFormat.json";
-    private $pathToFileExpectedPlainFormat = __DIR__ . "/fixtures/expectedPlainFormat.txt";
-    private $pathToFileExpectedPrettyFormat = __DIR__ . "/fixtures/expectedPrettyFormat.txt";
-
+    private function getFilePath($file): string
+    {
+        return dirname(__DIR__) . "/tests/fixtures/{$file}";
+    }
     /**
      * @dataProvider additionProviderFormat
      *
-     * @param $expectedData
-     * @param $dataBefore
-     * @param $dataAfter
+     * @param $fileWithExpectedData
+     * @param $prevVerFile
+     * @param $newVerFile
      * @param $format
+     *
+     * @throws \Exception
      */
-    public function testEqualsFormat($expectedData, $dataBefore, $dataAfter, $format): void
+    public function testEqualsFormat($fileWithExpectedData, $prevVerFile, $newVerFile, string $format): void
     {
-        self::assertEquals($expectedData, genDiff($dataBefore, $dataAfter, $format));
+        $expected = readFile($this->getFilePath($fileWithExpectedData));
+
+        self::assertEquals(
+            $expected,
+            genDiff(
+                $this->getFilePath($prevVerFile),
+                $this->getFilePath($newVerFile),
+                $format
+            )
+        );
     }
 
     public function additionProviderFormat(): array
     {
-        $expectedJsonFormat = file_get_contents(
-            $this->pathToFileExpectedJsonFormat
-        );
-
-        $expectedPlainFormat = file_get_contents(
-            $this->pathToFileExpectedPlainFormat
-        );
-
-        $expectedPrettyFormat = file_get_contents(
-            $this->pathToFileExpectedPrettyFormat
-        );
-
         return [
             'JsonPrettyFormat' => [
-                $expectedPrettyFormat,
-                $this->pathToFileBeforeJson,
-                $this->pathToFileAfterJson,
+                'expectedPrettyFormat.txt',
+                'testFileNestedOne.json',
+                'testFileNestedTwo.json',
                 'pretty'
             ],
             'JsonPlainFormat' => [
-                $expectedPlainFormat,
-                $this->pathToFileBeforeJson,
-                $this->pathToFileAfterJson,
+                'expectedPlainFormat.txt',
+                'testFileNestedOne.json',
+                'testFileNestedTwo.json',
                 'plain'
             ],
             'JsonJsonFormat' => [
-                $expectedJsonFormat,
-                $this->pathToFileBeforeJson,
-                $this->pathToFileAfterJson,
+                'expectedJsonFormat.json',
+                'testFileNestedOne.json',
+                'testFileNestedTwo.json',
                 'json'
             ],
             'YmlPrettyFormat' => [
-                $expectedPrettyFormat,
-                $this->pathToFileBeforeYml,
-                $this->pathToFileAfterYml,
+                'expectedPrettyFormat.txt',
+                'testFileNestedOne.yml',
+                'testFileNestedTwo.yml',
                 'pretty'
             ],
             'YmlPlainFormat' => [
-                $expectedPlainFormat,
-                $this->pathToFileBeforeYml,
-                $this->pathToFileAfterYml,
+                'expectedPlainFormat.txt',
+                'testFileNestedOne.yml',
+                'testFileNestedTwo.yml',
                 'plain'
             ],
             'YmlJsonFormat' => [
-                $expectedJsonFormat,
-                $this->pathToFileBeforeYml,
-                $this->pathToFileAfterYml,
+                'expectedJsonFormat.json',
+                'testFileNestedOne.yml',
+                'testFileNestedTwo.yml',
                 'json'
             ],
         ];

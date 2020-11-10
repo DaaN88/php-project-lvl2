@@ -30,12 +30,12 @@ $doc = <<<DOCOPT
 
 $result = Docopt::handle($doc);
 
-$pathBeforeFile = $result->args['<firstFile>'];
-$pathAfterFile = $result->args['<secondFile>'];
+$filePrevVerPath = $result->args['<firstFile>'];
+$fileNewVerPath = $result->args['<secondFile>'];
 $format = $result->args['--format'];
 
 try {
-    echo(genDiff($pathBeforeFile, $pathAfterFile, $format));
+    echo(genDiff($filePrevVerPath, $fileNewVerPath, $format));
 } catch (\Exception $message) {
     echo $message->getMessage();
     exit(1);

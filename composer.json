@@ -3,8 +3,9 @@
     "autoload": {
         "files": [
             "src/Engine.php",
-            "src/Parsers.php",
-            "src/BuilderAST.php",
+            "src/Parser.php",
+            "src/ReadFile.php",
+            "src/ASTBuilder.php",
             "src/Formatters/PrettyFormatter.php",
             "src/Formatters/PlainFormatter.php",
             "src/Formatters/JsonFormatter.php"

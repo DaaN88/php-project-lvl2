@@ -6,110 +6,72 @@ use InvalidArgumentException;
 
 function getPrettyFormat(array $treeAST): string
 {
-    $iteratingOverArrays = static function (
-        $currentValues,
-        $indent
-    ) use (&$iteratingOverArrays) {
-        return array_reduce(
-            array_keys($currentValues),
-            static function (
-                $accum,
-                $key
-            ) use (
-                $iteratingOverArrays,
-                $currentValues,
-                $indent
-            ) {
-                $buffer = [];
-
-                if (array_key_exists('status', $currentValues[$key])) {
-                    $status = $currentValues[$key]['status'];
-
-                    switch ($status) {
-                        case 'added':
-                            $buffer[] = $indent
-                                .
-                                "  + "
-                                .
-                                $key
-                                .
-                                ": "
-                                .
-                                valueToString($currentValues[$key]['value'], $indent);
-                            break;
-                        case 'deleted':
-                            $buffer[] = $indent
-                                .
-                                "  - "
-                                .
-                                $key
-                                .
-                                ": "
-                                .
-                                valueToString($currentValues[$key]['value'], $indent);
-                            break;
-                        case 'nested':
-                            $buffer[] = $indent . "    " . $key . ": {";
-
-                            $newIndent = $indent . '    ';
-
-                            $goInDepth = $iteratingOverArrays(
-                                $currentValues[$key]['nested structure'],
-                                $newIndent
-                            );
-
-                            $buffer = array_merge($buffer, $goInDepth);
-
-                            $buffer[] = $indent . "    " . "}";
-                            break;
-                        case 'unchanged':
-                            $buffer[] = $indent
-                                .
-                                "    "
-                                .
-                                $key
-                                .
-                                ": "
-                                .
-                                valueToString($currentValues[$key]['value'], $indent);
-                            break;
-                        case 'changed':
-                            $buffer[] = $indent
-                                .
-                                "  - "
-                                .
-                                $key
-                                .
-                                ": "
-                                .
-                                valueToString($currentValues[$key]['oldValue'], $indent);
-
-                            $buffer[] = $indent
-                                .
-                                "  + "
-                                .
-                                $key
-                                .
-                                ": "
-                                .
-                                valueToString($currentValues[$key]['newValue'], $indent);
-                            break;
-                        default:
-                            throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
-                    }
-                }
-
-                return array_merge($accum, $buffer);
-            },
-            []
-        );
-    };
-
-    $result = $iteratingOverArrays($treeAST, '');
+    $result = iteratingOverArrays($treeAST, '');
 
     $result = array_merge(["{"], $result, ["}"]);
 
     return implode("\n", $result);
+}
+
+function iteratingOverArrays($currentValues, $indent)
+{
+    return array_reduce(
+        array_keys($currentValues),
+        static function (
+            $accum,
+            $key
+        ) use (
+            $currentValues,
+            $indent
+        ) {
+            $status = $currentValues[$key]['status'];
+
+            switch ($status) {
+                case 'added':
+                    $value = valueToString($currentValues[$key]['value'], $indent);
+
+                    $accum[] = "{$indent}  + {$key}: {$value}";
+                    break;
+                case 'deleted':
+                    $value = valueToString($currentValues[$key]['value'], $indent);
+
+                    $accum[] = "{$indent}  - {$key}: {$value}";
+                    break;
+                case 'children':
+                    $accum[] = "{$indent}    {$key}: {";
+
+                    $newIndent = "{$indent}    ";
+
+                    $goInDepth = iteratingOverArrays(
+                        $currentValues[$key]['children'],
+                        $newIndent
+                    );
+
+                    $accum = array_merge($accum, $goInDepth);
+
+                    $accum[] = "{$indent}    }";
+                    break;
+                case 'unchanged':
+                    $value = valueToString($currentValues[$key]['value'], $indent);
+
+                    $accum[] = "{$indent}    {$key}: {$value}";
+                    break;
+                case 'changed':
+                    $oldValue = valueToString($currentValues[$key]['oldValue'], $indent);
+                    $newValue = valueToString($currentValues[$key]['newValue'], $indent);
+
+                    $accum[] = "{$indent}  - {$key}: $oldValue";
+
+                    $accum[] = "{$indent}  + {$key}: $newValue";
+                    break;
+                default:
+                    throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
+            }
+
+            return $accum;
+        },
+        []
+    );
 }
 
 function valueToString($value, string $indent): string //$value - type mixed

@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\BuilderAST;
+namespace Gendiff\ASTBuilder;
 
 use function Funct\Collection\union;
 
@@ -43,7 +43,7 @@ function buildAst(array $dataBefore, array $dataAfter): array
                     $newValue
                 );
 
-                $carry[$sharedKey] = ['nested structure' => $goInDepth, 'status' => 'nested'];
+                $carry[$sharedKey] = ['children' => $goInDepth, 'status' => 'children'];
                 return $carry;
             }
 
