@@ -31,31 +31,31 @@ function getLines(array $ast, string $indent): array
                     $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}  + {$key}: {$value}";
-                    break;
+                    return $accum;
                 case 'deleted':
                     $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}  - {$key}: {$value}";
-                    break;
+                    return $accum;
                 case 'children':
                     $accum[] = "{$indent}    {$key}: {";
 
                     $newIndent = "{$indent}    ";
 
-                    $goInDepth = getLines(
+                    $nestedLines = getLines(
                         $ast[$key]['children'],
                         $newIndent
                     );
 
-                    $accum = array_merge($accum, $goInDepth);
+                    $accum = array_merge($accum, $nestedLines);
 
                     $accum[] = "{$indent}    }";
-                    break;
+                    return $accum;
                 case 'unchanged':
                     $value = valueToString($ast[$key]['value'], $indent);
 
                     $accum[] = "{$indent}    {$key}: {$value}";
-                    break;
+                    return $accum;
                 case 'changed':
                     $oldValue = valueToString($ast[$key]['oldValue'], $indent);
                     $newValue = valueToString($ast[$key]['newValue'], $indent);
@@ -63,18 +63,22 @@ function getLines(array $ast, string $indent): array
                     $accum[] = "{$indent}  - {$key}: $oldValue";
 
                     $accum[] = "{$indent}  + {$key}: $newValue";
-                    break;
+                    return $accum;
                 default:
                     throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
             }
-
-            return $accum;
         },
         []
     );
 }
 
-function valueToString($value, string $indent): string //$value - type mixed
+/**
+ * @param mixed $value
+ * @param string $indent
+ *
+ * @return string
+ */
+function valueToString($value, string $indent): string
 {
     if (is_array($value)) {
         return arrayToString($value, $indent);
@@ -91,10 +95,10 @@ function arrayToString(array $array, string $indent): string
 {
     $indent .= '    ';
 
-    $strings = array_reduce(
+    $lines = array_reduce(
         array_keys($array),
         static function (
-            $accum,
+            $lines,
             $key
         ) use (
             $array,
@@ -102,15 +106,15 @@ function arrayToString(array $array, string $indent): string
         ) {
             $value = valueToString($array[$key], $indent);
 
-            $accum[] = $indent . $key . ": " . $value;
+            $lines[] = "    {$indent}{$key}: $value";
 
-            return $accum;
+            return $lines;
         },
         []
     );
 
     $result[] = "{";
-    $result[] = implode("\n", array_map(static fn($line) => "    $line", $strings));
+    $result[] = implode("\n", array_map(static fn($line) => $line, $lines));
     $result[] = $indent . "}";
 
     return implode("\n", $result);

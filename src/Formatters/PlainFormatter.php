@@ -2,67 +2,69 @@
 
 namespace Gendiff\Formatters\PlainFormatter;
 
-function getPlainFormat(array $treeAST): string
+function getPlainFormat(array $ast): string
 {
-    $iter = static function (
-        $valuesOfTree,
-        $currentKey
-    ) use (&$iter) {
-        return array_reduce(
-            array_keys($valuesOfTree),
-            static function (
-                $lines,
-                $key
-            ) use (
-                $iter,
-                $valuesOfTree,
-                $currentKey
-            ) {
-                $status = $valuesOfTree[$key]['status'];
-
-                switch ($status) {
-                    case 'added':
-                        $value = valueToString($valuesOfTree[$key]['value']);
-
-                        $lines[] = "Property '{$currentKey}{$key}' was added with value: '{$value}'";
-                        break;
-                    case 'deleted':
-                        $lines[] = "Property '{$currentKey}{$key}' was removed";
-                        break;
-                    case 'children':
-                        $currentKey .= "{$key}.";
-
-                        $goInDepth = $iter(
-                            $valuesOfTree[$key]['children'],
-                            $currentKey
-                        );
-
-                        $lines = array_merge($lines, $goInDepth);
-                        break;
-                    case 'changed':
-                        $oldValue = valueToString($valuesOfTree[$key]['oldValue']);
-                        $newValue = valueToString($valuesOfTree[$key]['newValue']);
-
-                        $lines[] = "Property '{$currentKey}{$key}' was updated. From '{$oldValue}' to '{$newValue}'";
-                        break;
-                    case 'unchanged':
-                        break;
-                    default:
-                        throw new \Exception("Unknown status: {$status}. Terminated.");
-                }
-
-                return $lines;
-            },
-            []
-        );
-    };
-
-    $result = $iter($treeAST, '');
+    $result = getLines($ast, '');
 
     return implode("\n", $result);
 }
 
-function valueToString($value): string //$value - type mixed
+function getLines($ast, $path)
+{
+    return array_reduce(
+        array_keys($ast),
+        static function (
+            $lines,
+            $key
+        ) use (
+            $ast,
+            $path
+        ) {
+            $status = $ast[$key]['status'];
+
+            switch ($status) {
+                case 'added':
+                    $value = valueToString($ast[$key]['value']);
+
+                    $lines[] = "Property '{$path}{$key}' was added with value: '{$value}'";
+                    return $lines;
+                case 'deleted':
+                    $lines[] = "Property '{$path}{$key}' was removed";
+                    return $lines;
+                case 'children':
+                    $path .= "{$key}.";
+
+                    $nestedLines = getLines(
+                        $ast[$key]['children'],
+                        $path
+                    );
+
+                    $lines = array_merge($lines, $nestedLines);
+                    return $lines;
+                case 'changed':
+                    $oldValue = valueToString($ast[$key]['oldValue']);
+                    $newValue = valueToString($ast[$key]['newValue']);
+
+                    $lines[] = "Property '{$path}{$key}' was updated. From '{$oldValue}' to '{$newValue}'";
+                    return $lines;
+                case 'unchanged':
+                    break;
+                default:
+                    throw new \Exception("Unknown status: {$status}. Terminated.");
+            }
+
+            return $lines;
+        },
+        []
+    );
+}
+
+/**
+ * @param mixed $value
+ *
+ * @return string
+ */
+function valueToString($value): string
 {
     if (is_array($value)) {
         return "[complex value]";
