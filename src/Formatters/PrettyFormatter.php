@@ -18,7 +18,7 @@ function getLines(array $ast, string $indent): array
     return array_reduce(
         array_keys($ast),
         static function (
-            $accum,
+            $lines,
             $key
         ) use (
             $ast,
@@ -30,15 +30,15 @@ function getLines(array $ast, string $indent): array
                 case 'added':
                     $value = valueToString($ast[$key]['value'], $indent);
 
-                    $accum[] = "{$indent}  + {$key}: {$value}";
-                    return $accum;
+                    $lines[] = "{$indent}  + {$key}: {$value}";
+                    return $lines;
                 case 'deleted':
                     $value = valueToString($ast[$key]['value'], $indent);
 
-                    $accum[] = "{$indent}  - {$key}: {$value}";
-                    return $accum;
+                    $lines[] = "{$indent}  - {$key}: {$value}";
+                    return $lines;
                 case 'children':
-                    $accum[] = "{$indent}    {$key}: {";
+                    $lines[] = "{$indent}    {$key}: {";
 
                     $newIndent = "{$indent}    ";
 
@@ -47,23 +47,23 @@ function getLines(array $ast, string $indent): array
                         $newIndent
                     );
 
-                    $accum = array_merge($accum, $nestedLines);
+                    $lines = array_merge($lines, $nestedLines);
 
-                    $accum[] = "{$indent}    }";
-                    return $accum;
+                    $lines[] = "{$indent}    }";
+                    return $lines;
                 case 'unchanged':
                     $value = valueToString($ast[$key]['value'], $indent);
 
-                    $accum[] = "{$indent}    {$key}: {$value}";
-                    return $accum;
+                    $lines[] = "{$indent}    {$key}: {$value}";
+                    return $lines;
                 case 'changed':
                     $oldValue = valueToString($ast[$key]['oldValue'], $indent);
                     $newValue = valueToString($ast[$key]['newValue'], $indent);
 
-                    $accum[] = "{$indent}  - {$key}: $oldValue";
+                    $lines[] = "{$indent}  - {$key}: $oldValue";
 
-                    $accum[] = "{$indent}  + {$key}: $newValue";
-                    return $accum;
+                    $lines[] = "{$indent}  + {$key}: $newValue";
+                    return $lines;
                 default:
                     throw new InvalidArgumentException("Unknown status: {$status}. Terminated.");
             }
