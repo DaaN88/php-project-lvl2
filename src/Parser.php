@@ -5,22 +5,18 @@ namespace Gendiff\Parser;
 use InvalidArgumentException;
 use Symfony\Component\Yaml\Yaml;
 
-use function Gendiff\ReadFile\readFile;
-
-function parse(string $filePath): array
+function parse(string $format, string $data): array
 {
-    $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-
-    switch ($fileExtension) {
+    switch ($format) {
         case 'json':
-            $data = json_decode(readFile($filePath), true, 512, JSON_THROW_ON_ERROR);
+            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
             break;
         case 'yaml':
         case 'yml':
-            $data = Yaml::parseFile($filePath);
+            $data = Yaml::parse($data);
             break;
         default:
-            throw new InvalidArgumentException("Invalid file extension: {$fileExtension}. Terminated.");
+            throw new InvalidArgumentException("Invalid file extension: {$format}. Terminated.");
     }
 
     return $data;

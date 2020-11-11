@@ -11,21 +11,21 @@ class GenDiffTest extends TestCase
 {
     private function getFilePath($file): string
     {
-        return dirname(__DIR__) . "/tests/fixtures/{$file}";
+        return __DIR__ . "/fixtures/{$file}";
     }
+
     /**
      * @dataProvider additionProviderFormat
      *
-     * @param $fileWithExpectedData
-     * @param $prevVerFile
-     * @param $newVerFile
-     * @param $format
+     * @param string $expectedData path
+     * @param string $prevVerFile path
+     * @param string $newVerFile path
+     * @param string $format
      *
-     * @throws \Exception
      */
-    public function testEqualsFormat($fileWithExpectedData, $prevVerFile, $newVerFile, string $format): void
+    public function testEqualsFormat($expectedData, $prevVerFile, $newVerFile, string $format): void
     {
-        $expected = readFile($this->getFilePath($fileWithExpectedData));
+        $expected = file_get_contents($this->getFilePath($expectedData));
 
         self::assertEquals(
             $expected,
