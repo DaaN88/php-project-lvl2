@@ -9,7 +9,7 @@ function getPlainFormat(array $ast): string
     return implode("\n", $result);
 }
 
-function getLines($ast, $path)
+function getLines(array $ast, string $path): array
 {
     return array_reduce(
         array_keys($ast),
@@ -48,12 +48,10 @@ function getLines($ast, $path)
                     $lines[] = "Property '{$path}{$key}' was updated. From '{$oldValue}' to '{$newValue}'";
                     return $lines;
                 case 'unchanged':
-                    break;
+                    return $lines;
                 default:
                     throw new \Exception("Unknown status: {$status}. Terminated.");
             }
-
-            return $lines;
         },
         []
     );

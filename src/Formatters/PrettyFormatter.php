@@ -114,7 +114,7 @@ function arrayToString(array $array, string $indent): string
     );
 
     $result[] = "{";
-    $result[] = implode("\n", array_map(static fn($line) => $line, $lines));
+    $result[] = implode("\n", $lines);
     $result[] = $indent . "}";
 
     return implode("\n", $result);
