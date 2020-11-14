@@ -2,7 +2,7 @@
 
 namespace Gendiff\Formatters\JsonFormatter;
 
-function getJsonFormat(array $astTree): string
+function getJsonFormat(array $ast): string
 {
-    return json_encode($astTree, JSON_THROW_ON_ERROR);
+    return json_encode($ast, JSON_THROW_ON_ERROR);
 }

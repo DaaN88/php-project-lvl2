@@ -9,15 +9,11 @@ function parse(string $format, string $data): array
 {
     switch ($format) {
         case 'json':
-            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-            break;
+            return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         case 'yaml':
         case 'yml':
-            $data = Yaml::parse($data);
-            break;
+            return Yaml::parse($data);
         default:
-            throw new InvalidArgumentException("Invalid file extension: {$format}. Terminated.");
+            throw new InvalidArgumentException("Invalid format: {$format}. Terminated.");
     }
-
-    return $data;
 }

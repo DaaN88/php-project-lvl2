@@ -5,7 +5,6 @@ namespace Gendiff\Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Gendiff\Engine\genDiff;
-use function Gendiff\ReadFile\readFile;
 
 class GenDiffTest extends TestCase
 {
@@ -23,15 +22,19 @@ class GenDiffTest extends TestCase
      * @param string $format
      *
      */
-    public function testEqualsFormat($expectedData, $prevVerFile, $newVerFile, string $format): void
-    {
-        $expected = file_get_contents($this->getFilePath($expectedData));
+    public function testEqualsFormat(
+        string $pathExpectedFile,
+        string $firstFile,
+        string $secondFile,
+        string $format
+    ): void {
+        $expected = file_get_contents($this->getFilePath($pathExpectedFile));
 
         self::assertEquals(
             $expected,
             genDiff(
-                $this->getFilePath($prevVerFile),
-                $this->getFilePath($newVerFile),
+                $this->getFilePath($firstFile),
+                $this->getFilePath($secondFile),
                 $format
             )
         );

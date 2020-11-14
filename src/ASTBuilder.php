@@ -38,12 +38,12 @@ function buildAst(array $dataBefore, array $dataAfter): array
             }
 
             if (is_array($oldValue) && is_array($newValue)) {
-                $goInDepth = buildAst(
+                $children = buildAst(
                     $oldValue,
                     $newValue
                 );
 
-                $carry[$sharedKey] = ['children' => $goInDepth, 'status' => 'children'];
+                $carry[$sharedKey] = ['children' => $children, 'status' => 'children'];
                 return $carry;
             }
 
