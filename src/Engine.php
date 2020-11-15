@@ -13,8 +13,8 @@ use function Gendiff\ASTBuilder\buildAst;
 
 function genDiff(string $firstFile, string $secondFile, string $format): string
 {
-    [$extensionFirst, $dataFirst] = fileReader($firstFile);
-    [$extensionSecond, $dataSecond] = fileReader($secondFile);
+    [$extensionFirst, $dataFirst] = readFile($firstFile);
+    [$extensionSecond, $dataSecond] = readFile($secondFile);
 
     $parsedDataBefore = parse($extensionFirst, $dataFirst);
     $parsedDataAfter = parse($extensionSecond, $dataSecond);
@@ -38,7 +38,7 @@ function render(string $format, array $ast): string
     }
 }
 
-function fileReader(string $filePath): array
+function readFile(string $filePath): array
 {
     $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
