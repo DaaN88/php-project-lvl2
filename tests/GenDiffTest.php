@@ -24,8 +24,8 @@ class GenDiffTest extends TestCase
      */
     public function testEqualsFormat(
         string $pathExpectedFile,
-        string $firstFile,
-        string $secondFile,
+        string $firstFilePath,
+        string $secondFilePath,
         string $format
     ): void {
         $expected = file_get_contents($this->getFilePath($pathExpectedFile));
@@ -33,8 +33,8 @@ class GenDiffTest extends TestCase
         self::assertEquals(
             $expected,
             genDiff(
-                $this->getFilePath($firstFile),
-                $this->getFilePath($secondFile),
+                $this->getFilePath($firstFilePath),
+                $this->getFilePath($secondFilePath),
                 $format
             )
         );

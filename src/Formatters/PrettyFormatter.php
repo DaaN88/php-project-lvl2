@@ -91,22 +91,23 @@ function valueToString($value, string $indent): string
     return (string)$value;
 }
 
-function arrayToString(array $array, string $indent): string
+function arrayToString(array $value, string $indent): string
 {
-    $indent .= '    ';
+    $addedIndent = '    ';
+    $addedIndent .= $indent;
 
     $lines = array_reduce(
-        array_keys($array),
+        array_keys($value),
         static function (
             $lines,
             $key
         ) use (
-            $array,
-            $indent
+            $value,
+            $addedIndent
         ) {
-            $value = valueToString($array[$key], $indent);
+            $value = valueToString($value[$key], $addedIndent);
 
-            $lines[] = "    {$indent}{$key}: $value";
+            $lines[] = "    {$addedIndent}{$key}: $value";
 
             return $lines;
         },
@@ -115,7 +116,7 @@ function arrayToString(array $array, string $indent): string
 
     $result[] = "{";
     $result[] = implode("\n", $lines);
-    $result[] = $indent . "}";
+    $result[] = $addedIndent . "}";
 
     return implode("\n", $result);
 }
